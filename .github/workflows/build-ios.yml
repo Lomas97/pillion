@@ -20,6 +20,10 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
 
+      - name: Create signing config
+        run: |
+          printf '// CI unsigned build\n' > iosApp/Signing.xcconfig
+
       - name: Build IPA
         run: |
           chmod +x gradlew
