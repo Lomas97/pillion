@@ -1,0 +1,35 @@
+name: Build Pillion iOS IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-26
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Build IPA
+        run: |
+          chmod +x gradlew
+          chmod +x iosApp/build-ipa.sh
+          cd iosApp
+          ./build-ipa.sh Release
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Pillion-iOS
+          path: iosApp/Pillion.ipa
+          if-no-files-found: error
